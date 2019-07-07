@@ -6,7 +6,8 @@ import axios from 'axios';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state={tcop: []}
+    
+    this.state={tcop: [],sent:false}
   }
   add = (x, y) => {
     let d=new Date();
@@ -17,13 +18,22 @@ class App extends React.Component {
         tcop: [record,...this.state.tcop]
       });
     }
-    axios.post(`http://localhost:3000/posts`,record)
+    axios.post(`http://703ba6bb.ngrok.io/posts`,record)
     .then(response=>{
-     
+      this.setState({sent:true})
     })
     .catch(err=>{
       console.log(err)
     })
+    // if(true){
+    //   axios.get(`http://703ba6bb.ngrok.io/posts`,record)
+    // .then(res=>{
+    //   console.log("post gotten")
+    //   this.setState({tcop:[...res.data],sent:false})
+    // }).catch(err=>{
+    //   console.log(err)
+    // })
+    // }
   };
   add_likes=x=>{
     let r=this.state.tcop.map(o => {
@@ -37,12 +47,12 @@ class App extends React.Component {
     this.setState({
       tcop: [...r]
     });
-    let k=this.state.tcop.map(o => {
-      if(o.id===x)
-      return o;
+    let k=this.state.tcop.filter(o => {
+      return o.id===x;
+      
     });
-    
-    axios.put(`http://localhost:3000/posts/${x}`,k[0])
+  
+    axios.put(`http://703ba6bb.ngrok.io/posts/${x}`,k[0])
     .then(response=>{
       
     })
@@ -83,11 +93,25 @@ class App extends React.Component {
     });
   }
   componentDidMount() {
-    axios.get('http://localhost:3000/posts')
+    axios.get('http://703ba6bb.ngrok.io/posts')
     .then(a=>{
-      const persons = a.data;
-        this.setState({tcop: persons });
+      console.log("componenentss")
+      const persons = a.data.reverse();
+        this.setState({tcop: [...persons] });
     })
+}
+componentWillUpdate(){
+  var x=30;
+  if(x>0){
+  setTimeout(axios.get('http://703ba6bb.ngrok.io/posts')
+  .then(a=>{
+    
+    const persons = a.data.reverse();
+    
+      this.setState({tcop: [...persons] ,sent:false});
+      x--;
+  }).catch(err=>{console.log(err)}), 20000); 
+}
 }
   render() {
     return (
