@@ -1,11 +1,28 @@
 {
-    "posts":[
-        {
-            "id": "undefined",
-            "title": "Demo Post", 
-            "post": "Your content is shown this way", 
-            "likes":0,
-            "comments":[]
-        }
-    ]
+  "posts": [
+    {
+      "id": 1562448441000,
+      "title": "bbb",
+      "post": "",
+      "likes": 4,
+      "comments": [],
+      "toggle": true
+    },
+    {
+      "id": 1562448553000,
+      "title": "This is awesome!!",
+      "post": "The actual implementation of the app is done in this program of blog list but it is more of a react learning thing",
+      "likes": 0,
+      "comments": [],
+      "toggle": true
+    },
+    {
+      "id": 1562449330000,
+      "title": "ldjlaskdj",
+      "post": "",
+      "likes": 0,
+      "comments": [],
+      "toggle": true
+    }
+  ]
 }

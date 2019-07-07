@@ -2,24 +2,34 @@ import React from "react";
 class Post extends React.Component {
   constructor(props) {
     super(props);
-    this.state={comment:""};
+   
     this.state = {
-      j: false
+      j: false,
+      comment:""
   }
   }
   cclick = () => {
-    this.props.addcom(this.state.comment,this.props.aaa.id);
+    this.props.addcom(this.state.comment,this.props.post.id);
   }
   comchange = even => {
     this.setState({ comment: even.target.value });
   }
   likes=()=>{
-    this.props.f(this.props.aaa.id);
+    this.props.likes(this.props.post.id);
   }
   delete=()=>{
-    this.props.d(this.props.aaa.id);
+    this.props.del(this.props.post.id);
+  }
+  addcom=e=>{
+    if(e.key==='Enter'){
+      this.props.addcom(this.state.comment,this.props.post.id)
+      this.setState({
+        comment:""
+      })
+    }
   }
   showcomments=()=>{
+    
     if(this.state.j){
       this.setState({
         j: false
@@ -30,12 +40,14 @@ class Post extends React.Component {
         j: true
     })
     }
+   
+    this.props.toggle(this.state.j,this.props.post.id)
   }
   render() {
 return (
       <div className="row shadow p-3 mb-5 bg-white rounded">
         <div className="col-sm-12">
-          <h4>{this.props.aaa.title}</h4>
+          <h4>{this.props.post.title}</h4>
           
           <hr />
         </div>
@@ -43,12 +55,12 @@ return (
           <button className="btn btn-sm btn-info" onClick={this.delete}>Delete</button> 
         </div>
         <div className="col-sm-10">
-          <p>{this.props.aaa.post}</p>
+          <p>{this.props.post.post}</p>
          
           <div className="row">
         <div className="col-lg-2">
           <button className="btn btn-sm btn-info" onClick={this.likes}>
-            {this.props.aaa.likes} LIKES
+            {this.props.post.likes} LIKES
           </button>
         </div>
 
@@ -57,7 +69,7 @@ return (
         <div className="row">
           <div className="col-lg-3">Comments</div>
           <div className="col-lg-6 form-group w-100">
-            <input className="col-*-* mt-4 mb-4 ml-4" onChange={this.comchange} placeholder="comment here"/>
+            <input className="col-*-* form-control" onChange={this.comchange} value={this.state.comment} onKeyDown={this.addcom} placeholder="comment here"/>
           </div>
           <div className="col-lg-3">
                     <button className="btn btn-default btn-sm" onClick={this.showcomments}>View Comments</button>
@@ -65,9 +77,9 @@ return (
         </div>
       </div>
 
-      <div>{this.state.j?
+      <div>{this.props.post.toggle?
       <div>
-      {this.props.aaa.comments.map(i => {
+      {this.props.post.comments.map(i => {
           return <div className="col-sm-12 shadow p-3 mb-5 bg-white rounded">
           {i}
       </div>

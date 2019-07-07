@@ -4,20 +4,46 @@ class Add_post extends React.Component {
     super(props);
     this.cake = props.name;
     this.state = { title: "" };
-    this.state = { post: "" };
+    this.state = { post: "",error:false};
   }
   handleChange = even => {
     this.setState({ title: even.target.value });
+    if(this.state.title!==""){
+      this.setState({
+        error:false
+      });
+    }
   };
+  enter=(e)=>{
+    if(e.key==='Enter'){
+      if(this.state.title===""){
+        this.setState({
+          error:true
+        });
+      }else{
+      this.props.posts(this.state.title, this.state.post);
+      this.setState({
+        title: "",
+        post:""
+      });
+    }
+     
+    }
+  }
   handleChan = even => {
     this.setState({ post: even.target.value });
   };
   return_post = e => {
     if (this.state.title !== "") {
       this.props.posts(this.state.title, this.state.post);
+    }else{
+      this.setState({
+        error:true
+      });
     }
     this.setState({
-      title: ""
+      title: "",
+      post:""
     });
   };
   render() {
@@ -35,6 +61,7 @@ class Add_post extends React.Component {
                   value={this.state.title}
                   onChange={this.handleChange}
                   placeholder="Title"
+                  onKeyDown={this.enter}
                 />
               </div>
               <textarea
@@ -46,6 +73,7 @@ class Add_post extends React.Component {
                 onChange={this.handleChan}
                 placeholder="What's on your mind?"
               />
+              {this.state.error?<div className="small text-danger">No Title!</div>:""}
               <br />
               <div className="form-group">
                 <button

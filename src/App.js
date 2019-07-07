@@ -1,7 +1,7 @@
 import React from "react";
-import Add_post from "./addpost";
-import Post from "./posts";
-import Navbar from "./navbar";
+import Add_post from "./Addpost";
+import Post from "./Posts";
+import Navbar from "./Navbar";
 import axios from 'axios';
 class App extends React.Component {
   constructor(props) {
@@ -11,29 +11,48 @@ class App extends React.Component {
   add = (x, y) => {
     let d=new Date();
     const id = Date.parse(d);
-    const record = { id: id, title: x, post: y, likes:0, comments:[]};
+    const record = { id: id, title: x, post: y, likes:0, comments:[],toggle:true};
     if(x!==undefined ){
       this.setState({
         tcop: [record,...this.state.tcop]
       });
     }
+    axios.post(`http://localhost:3000/posts`,record)
+    .then(response=>{
+     
+    })
+    .catch(err=>{
+      console.log(err)
+    })
   };
   add_likes=x=>{
     let r=this.state.tcop.map(o => {
       if(o.id === x)
       {
         o.likes=o.likes+1;
-        console.log(o);
+        
       }
       return o;
     });
     this.setState({
       tcop: [...r]
     });
+    let k=this.state.tcop.map(o => {
+      if(o.id===x)
+      return o;
+    });
+    
+    axios.put(`http://localhost:3000/posts/${x}`,k[0])
+    .then(response=>{
+      
+    })
+    .catch(err=>{
+      console.log(err)
+    })
   }
   add_comment=(x,y)=>{
     let r=this.state.tcop.map(o => {
-      if(o.id == y)
+      if(o.id === y)
       {
         o.comments=[x,...o.comments];
       }
@@ -42,6 +61,18 @@ class App extends React.Component {
     this.setState({
       tcop: [...r]
     });
+  }
+  toggle = (v,y) =>{
+    let r=this.state.tcop.map(o => {
+      if(o.id === y)
+      {
+        o.toggle=v
+      }
+      return o;
+    });
+    this.setState({
+      tcop: [...r]
+    })
   }
   delete_post=x=>{
     let r = this.state.tcop.filter(item => {
@@ -64,19 +95,19 @@ class App extends React.Component {
         <Navbar />
           <Add_post name="Share here" posts={this.add} />
           <div>
-        <div class="container">
-          <div class="col-md-1" />
-          <div class="col-md-11">
-            <div class="row">
-              <div class="col-sm-12">
+        <div className="container">
+          <div className="col-md-1" />
+          <div className="col-md-11">
+            <div className="row">
+              <div className="col-sm-12">
                 <h1>
-                  <i class="glyphicon glyphicon-asterisk" /> posts
+                  <i className="glyphicon glyphicon-asterisk" /> posts
                 </h1>
-                <p class="page-header lead">Blog list example for Bootstrap</p>{" "}
+                <p className="page-header lead">Blog list example for Bootstrap</p>{" "}
               </div>
             </div>
             {this.state.tcop.map(i => {
-              return <Post aaa={i} f={this.add_likes} addcom={this.add_comment} d={this.delete_post}/>;
+              return <Post post={i} toggle={this.toggle} likes={this.add_likes} addcom={this.add_comment} del={this.delete_post}/>;
             })}
             
           </div>
